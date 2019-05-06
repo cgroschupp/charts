@@ -67,7 +67,18 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           env:
-{{- if .Values.secrets.htpasswd }}
+{{- if eq  .Values.auth.type "token" }}
+            - name: REGISTRY_AUTH
+              value: token
+            - name: REGISTRY_AUTH_TOKEN_REALM
+              value: {{ .Values.auth.token.realm }}
+            - name: REGISTRY_AUTH_TOKEN_ISSUER
+              value: {{ .Values.auth.token.issuer }}
+            - name: REGISTRY_AUTH_TOKEN_SERVICE
+              value: {{ .Values.auth.token.service }}
+            - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+              value: {{ .Values.auth.token.rootcertbundle }}
+{{- else if .Values.secrets.htpasswd }}
             - name: REGISTRY_AUTH
               value: "htpasswd"
             - name: REGISTRY_AUTH_HTPASSWD_REALM
@@ -159,7 +170,7 @@ spec:
               value: "true"
 {{- end }}
           volumeMounts:
-{{- if .Values.secrets.htpasswd }}
+{{- if or .Values.secrets.htpasswd .Values.secrets.authTokenCert }}
             - name: auth
               mountPath: /auth
               readOnly: true
@@ -184,14 +195,21 @@ spec:
 {{ toYaml .Values.tolerations | indent 8 }}
 {{- end }}
       volumes:
-{{- if .Values.secrets.htpasswd }}
+{{- if or .Values.secrets.htpasswd .Values.secrets.authTokenCert }}
         - name: auth
           secret:
             secretName: {{ template "docker-registry.fullname" . }}-secret
             items:
+{{- if .Values.secrets.htpasswd }}
             - key: htpasswd
               path: htpasswd
 {{- end }}
+{{- if .Values.secrets.authTokenCert }}
+            - key: authTokenCert
+              path: authTokenCert
+{{- end }}
+{{- end }}
+
 {{- if eq .Values.storage "filesystem" }}
         - name: data
       {{- if .Values.persistence.enabled }}

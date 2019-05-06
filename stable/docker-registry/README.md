@@ -73,6 +73,12 @@ their default values.
 | `ingress.path`              | Ingress service path                                                                       | `/`             |
 | `ingress.hosts`             | Ingress hostnames                                                                          | `[]`            |
 | `ingress.tls`               | Ingress TLS configuration (YAML)                                                           | `[]`            |
+| `auth.type`                 | Auth type                                                                                  | `nil`           |
+| `auth.token.realm`          | Realm for token auth                                                                       | `nil`           |
+| `auth.token.issuer`         | Issuer for token auth                                                                      | `nil`           |q
+| `auth.token.service`        | Service for token auth                                                                     | `nil`           |
+| `auth.token.rootcertbundle` | Rootcertbundle for token auth                                                              | `nil`           |
+| `secrets.authTokenCert`     | AuthTokenCert for token auth                                                               | `nil`           |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to
 `helm install`.

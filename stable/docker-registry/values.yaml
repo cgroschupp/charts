@@ -66,6 +66,13 @@ storage: filesystem
 secrets:
   haSharedSecret: ""
   htpasswd: ""
+  # authTokenCert: |-
+  #   -----BEGIN CERTIFICATE-----
+  #   ...
+  #   MAkGA1UEBhMCREUxCzAJBgNVBAgMAkhIMRAwDgYDVQQHDAdIYW1idXJnMRUwEwYD
+  #   ...
+  #   -----END CERTIFICATE-----
+
 # Secrets for Azure
 #   azure:
 #     accountName: ""
@@ -93,6 +100,13 @@ secrets:
 # swift:
 #  authurl: http://swift.example.com/
 #  container: my-container
+# auth:
+#  type: token
+#  token:
+#    realm: https://registry-auth.example.com/auth
+#    issuer: Auth service
+#    service: Docker registry
+#    rootcertbundle: /auth/authTokenCert
 
 configData:
   version: 0.1
